@@ -7,6 +7,7 @@ function createEmptyMemory(userId: number): UserMemory {
   return {
     userId,
     messages: [],
+    topicHits: 0,
     suggestedPractices: [],
     shortTermNotes: [],
   };
@@ -16,7 +17,12 @@ export class MemoryStore {
   get(userId: number): UserMemory {
     const existing = store.get(userId);
     if (existing) {
-      return existing;
+      return {
+        ...existing,
+        topicHits: existing.topicHits ?? 0,
+        suggestedPractices: existing.suggestedPractices ?? [],
+        shortTermNotes: existing.shortTermNotes ?? [],
+      };
     }
 
     const memory = createEmptyMemory(userId);
@@ -29,6 +35,9 @@ export class MemoryStore {
     store.set(userId, {
       ...memory,
       messages: trimmedMessages,
+      topicHits: memory.topicHits ?? 0,
+      suggestedPractices: memory.suggestedPractices ?? [],
+      shortTermNotes: memory.shortTermNotes ?? [],
     });
   }
 

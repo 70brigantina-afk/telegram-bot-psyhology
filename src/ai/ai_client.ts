@@ -13,8 +13,21 @@ interface ChatCompletionResponse {
   }>;
 }
 
+function debugAiConfig(): void {
+  const { aiApiUrl, aiModel, aiApiKey } = config;
+  console.log('[debug] AI_API_URL:', JSON.stringify(aiApiUrl));
+  console.log('[debug] AI_API_URL length:', aiApiUrl.length);
+  console.log('[debug] AI_API_URL trailing char codes:', [...aiApiUrl.slice(-3)].map((c) => c.charCodeAt(0)));
+  console.log('[debug] AI_MODEL:', JSON.stringify(aiModel));
+  console.log('[debug] AI_API_KEY length:', aiApiKey.length);
+  console.log('[debug] AI_API_KEY prefix:', aiApiKey.slice(0, 8));
+  console.log('[debug] AI_API_KEY suffix:', aiApiKey.slice(-6));
+}
+
 export class AiClient {
   async complete(messages: ChatCompletionMessage[], options?: { json?: boolean }): Promise<string> {
+    debugAiConfig();
+
     const response = await fetch(config.aiApiUrl, {
       method: 'POST',
       headers: {
@@ -31,6 +44,9 @@ export class AiClient {
 
     if (!response.ok) {
       const errorText = await response.text();
+      console.error('[debug] AI API error status:', response.status);
+      console.error('[debug] AI API error response URL:', response.url);
+      console.error('[debug] AI API full errorText:', errorText);
       throw new Error(`AI API error ${response.status}: ${errorText}`);
     }
 

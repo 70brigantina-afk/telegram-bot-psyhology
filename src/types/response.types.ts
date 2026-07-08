@@ -1,4 +1,5 @@
 import type { EmotionAnalysis } from './emotion.types';
+import type { FaqTopic } from '../knowledge/knowledge_loader';
 import type { MemoryContext } from './memory.types';
 
 export type SafetyLevel = 'safe' | 'attention' | 'crisis';
@@ -16,7 +17,13 @@ export type ResponseStrategy =
   | 'practice'
   | 'reframe'
   | 'marina_referral'
-  | 'safety_protocol';
+  | 'safety_protocol'
+  | 'faq'
+  | 'panic_stabilization'
+  | 'identity_question'
+  | 'post_crisis_check';
+
+export type IdentityTopic = 'who_am_i' | 'what_gender';
 
 export interface GeneratedResponse {
   text: string;
@@ -29,4 +36,5 @@ export interface ResponseEngineInput {
   memory: MemoryContext;
   safety: SafetyResult;
   emotion: EmotionAnalysis;
+  faqTopic?: FaqTopic | null;
 }
